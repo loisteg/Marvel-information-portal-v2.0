@@ -5,6 +5,7 @@ const useMarvelService = () => {
     const _apiBase = 'https://gateway.marvel.com:443/v1/public/';
     const _apiKey = 'apikey=b392e6dc73e1b9bea7c19d113a55c218';
     const _baseOffset = 210;
+    const _baseComicsOffset = 210;
 
     const getAllCharacters = async (offset = _baseOffset) => {
         const res = await request(`${_apiBase}characters?limit=9&offset=${offset}&${_apiKey}`);
@@ -14,6 +15,11 @@ const useMarvelService = () => {
     const getCharacter = async (id) => {
         const res = await request(`${_apiBase}characters/${id}?${_apiKey}`);
         return _transformCharacter(res.data.results[0]);
+    }
+
+    const getAllComics = async (comicsOffset = _baseComicsOffset) => {
+        const res = await request(`${_apiBase}comics?limit=8&offset=${comicsOffset}&${_apiKey}`);
+        return res.data.results.map(_transformComicsInfo);
     }
 
     const _transformCharacter = (char) => {
@@ -28,7 +34,20 @@ const useMarvelService = () => {
         }
     }
 
-    return {loading, error, getAllCharacters, getCharacter, clearError}
+    const _transformComicsInfo = (comics) => {
+        return {
+            id: comics.id,
+            title: comics.title,
+            description: comics.description,
+            pages: comics.pageCount,
+            thumbnail: comics.thumbnail.path + `.${comics.thumbnail.extension}`,
+            homepage: comics.urls[0].url,
+            price: comics.prices[0].price,
+            language: comics.textObjects[0] ? comics.textObjects[0].language : null
+        }
+    }
+
+    return {loading, error, getAllCharacters, getCharacter, clearError, getAllComics}
 }
 
 export default useMarvelService;

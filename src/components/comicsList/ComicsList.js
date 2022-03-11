@@ -1,10 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import './comicsList.scss';
-import uw from '../../resources/img/UW.png';
-import xMen from '../../resources/img/x-men.png';
 
 const ComicsList = (props) => {
 
@@ -16,10 +14,11 @@ const ComicsList = (props) => {
     const {loading, error, getAllComics} = useMarvelService();
 
     useEffect(() => {
-        onRequest(offset);
+        onRequest(offset, true);
     }, [])
     
-    const onRequest = () => {
+    const onRequest = (offset, initial) => {
+        initial ? setNewItemLoading(false) : setNewItemLoading(true);
         getAllComics(offset)
         .then(onComicsListLoaded);
     }
@@ -36,16 +35,6 @@ const ComicsList = (props) => {
         setComicsEnded(comicsEnded => ended);
     }
 
-    // For selected item adds active class
-
-    // const itemRefs = useRef([]);
-
-    // const focusOnItem = (id) => {
-    //     itemRefs.current.forEach(item => item.classList.remove('char__item_selected'));
-    //     itemRefs.current[id].classList.add('char__item_selected');
-    //     itemRefs.current[id].focus();
-    // }
-
     function renderList(arr) {
         const items = arr.map((item, i) => {
             let imgStyle = {'objectFit' : 'cover'};
@@ -56,16 +45,13 @@ const ComicsList = (props) => {
             return (
                 <li 
                 className="comics__item"
-                // ref={el => itemRefs.current[i] = el}
-                key={item.id}
+                key={i}
                 onClick={() => {
                     props.onComicsSelected(item.id);
-                    // focusOnItem(i);
                 }}
                 onKeyPress={(e) => {
                     if (e.key === ' ' || e.key === "Enter") {
                         props.onComicsSelected(item.id);
-                        // focusOnItem(i);
                     }
                 }}>
                     <a href="#">

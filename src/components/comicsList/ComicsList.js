@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+
 import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import './comicsList.scss';
 
-const ComicsList = (props) => {
+const ComicsList = () => {
 
     const [comicsList, setComicsList] = useState([]);
     const [offset, setOffset] = useState(210);
@@ -36,7 +38,7 @@ const ComicsList = (props) => {
     }
 
     function renderList(arr) {
-        const items = arr.map((item, i) => {
+        const items = arr.map((item) => {
             let imgStyle = {'objectFit' : 'cover'};
             if (item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
                 imgStyle = {'objectFit' : 'unset'};
@@ -45,20 +47,12 @@ const ComicsList = (props) => {
             return (
                 <li 
                 className="comics__item"
-                key={i}
-                onClick={() => {
-                    props.onComicsSelected(item.id);
-                }}
-                onKeyPress={(e) => {
-                    if (e.key === ' ' || e.key === "Enter") {
-                        props.onComicsSelected(item.id);
-                    }
-                }}>
-                    <a href="#">
+                key={item.id}>
+                    <Link to={`/comics/${item.id}`}>
                         <img src={item.thumbnail} alt={item.title} className={`comics__item-img ${imgStyle}`}/>
                         <div className="comics__item-name">{item.title}</div>
-                        <div className="comics__item-price">{item.price ? item.price + '$' : "NOT AVAILABLE" }</div>
-                    </a>
+                        <div className="comics__item-price">{item.price ? item.price + '$' : "NOT AVAILABLE"}</div>
+                    </Link>
                 </li>
             )
         });

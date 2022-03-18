@@ -1,29 +1,47 @@
-import { useState, useEffect } from 'react';
+import {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
-import {CSSTransition, TransitionGroup} from 'react-transition-group';
+import {CSSTransition, TransitionGroup} from 'react-transition-group'
 
 import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
+
 import './comicsList.scss';
+
+const setContent = (process, Component, newItemLoading) => {
+    switch (process) {
+        case 'waiting':
+            return <Spinner/>;
+        case 'loading':
+            return newItemLoading ? <Component/> : <Spinner/>;
+        case 'confirmed':
+            return <Component/>;
+        case 'error':
+            return <ErrorMessage/>;
+        default:
+            throw new Error('Unexpected process state');
+    }
+}
 
 const ComicsList = () => {
 
     const [comicsList, setComicsList] = useState([]);
-    const [offset, setOffset] = useState(210);
-    const [newItemLoading, setNewItemLoading] = useState(false);
+    const [newItemLoading, setnewItemLoading] = useState(false);
+    const [offset, setOffset] = useState(0);
     const [comicsEnded, setComicsEnded] = useState(false);
 
-    const {loading, error, getAllComics} = useMarvelService();
+    const {getAllComics, process, setProcess} = useMarvelService();
 
     useEffect(() => {
         onRequest(offset, true);
+        // eslint-disable-next-line
     }, [])
-    
+
     const onRequest = (offset, initial) => {
-        initial ? setNewItemLoading(false) : setNewItemLoading(true);
+        initial ? setnewItemLoading(false) : setnewItemLoading(true);
         getAllComics(offset)
-        .then(onComicsListLoaded);
+            .then(onComicsListLoaded)
+            .then(() => setProcess('confirmed'));
     }
 
     const onComicsListLoaded = (newComicsList) => {
@@ -31,15 +49,14 @@ const ComicsList = () => {
         if (newComicsList.length < 8) {
             ended = true;
         }
-
-        setComicsList(comicsList => [...comicsList, ...newComicsList]);
-        setNewItemLoading(newItemLoading => false);
-        setOffset(offset => offset + 8);
-        setComicsEnded(comicsEnded => ended);
+        setComicsList([...comicsList, ...newComicsList]);
+        setnewItemLoading(false);
+        setOffset(offset + 8);
+        setComicsEnded(ended);
     }
 
-    function renderList(arr) {
-        const items = arr.map((item) => {
+    function renderItems (arr) {
+        const items = arr.map((item, i) => {
             let imgStyle = {'objectFit' : 'cover'};
             if (item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
                 imgStyle = {'objectFit' : 'unset'};
@@ -47,7 +64,7 @@ const ComicsList = () => {
 
             
             return (
-                <CSSTransition key={item.id} timeout={500} classNames="comics__item">
+                <CSSTransition key={i} timeout={500} classNames="comics__item">
                     <li 
                     className="comics__item"
                     key={item.id}>
@@ -67,22 +84,15 @@ const ComicsList = () => {
                 </TransitionGroup>
             </ul>
         );
-    } 
-
-    const items = renderList(comicsList);
-
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading && !newItemLoading ? <Spinner/> : null;
+    }
 
     return (
         <div className="comics__list">
-            {errorMessage}
-            {spinner}
-            {items}
+            {setContent(process, () => renderItems(comicsList), newItemLoading)}
             <button 
+                disabled={newItemLoading} 
+                style={{'display' : comicsEnded ? 'none' : 'block'}}
                 className="button button__main button__long"
-                disabled={newItemLoading}
-                style={{'display': comicsEnded ? 'none' : 'block'}}
                 onClick={() => onRequest(offset)}>
                 <div className="inner">load more</div>
             </button>

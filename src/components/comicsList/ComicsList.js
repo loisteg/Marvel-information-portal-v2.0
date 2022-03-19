@@ -64,24 +64,20 @@ const ComicsList = () => {
 
             
             return (
-                <CSSTransition key={i} timeout={500} classNames="comics__item">
-                    <li 
-                    className="comics__item"
-                    key={item.id}>
-                        <Link to={`/comics/${item.id}`}>
-                            <img src={item.thumbnail} alt={item.title} className={`comics__item-img ${imgStyle}`}/>
-                            <div className="comics__item-name">{item.title}</div>
-                            <div className="comics__item-price">{item.price ? item.price + '$' : "NOT AVAILABLE"}</div>
-                        </Link>
-                    </li>
-                </CSSTransition>
+                <li 
+                className="comics__item"
+                key={item.id}>
+                    <Link to={`/comics/${item.id}`}>
+                        <img src={item.thumbnail} alt={item.title} className={`comics__item-img ${imgStyle}`}/>
+                        <div className="comics__item-name">{item.title}</div>
+                        <div className="comics__item-price">{item.price}</div>
+                    </Link>
+                </li>
             )
         });
         return (
             <ul className="comics__grid">
-                <TransitionGroup component={null}>
-                 {items}
-                </TransitionGroup>
+                {items}
             </ul>
         );
     }

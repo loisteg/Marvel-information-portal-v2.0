@@ -52,3 +52,34 @@
         }
     }
 }
+
+@media (max-width: 1199px) {
+    .char {
+        &__search {
+            &-form {
+                padding: 13px;
+            }
+            &-wrapper {
+                display: flex;
+                flex-direction: column;
+                input {
+                    margin-top: 10px;
+                    margin-bottom: 20px;
+                    width: 100%;
+                }
+                a {
+                    margin-top: 10px;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .char {
+        &__search-form {
+            margin-top: 0px;
+            order: 1;
+        }
+    }
+}

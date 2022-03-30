@@ -62,5 +62,110 @@
         line-height: 24px;
         text-align: center;
     }
+}
 
+@media (max-width: 1199px) {
+    .char {
+        &__rightside-wrapper {
+            width: 59%;
+        }
+        &__info {
+            padding: 10px;
+            &-name {
+                margin-top: 20px;
+            }
+        }
+        &__basics {
+            display: flex;
+            flex-direction: column;
+            img {
+                width: 100%;
+            }
+        }
+        &__btns {
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: flex-end;
+        }
+        &__descr {
+            margin-top: 20px;
+        }
+    }
+}
+
+@media (max-width: 992px) {
+    .char {
+        &__rightside-wrapper {
+            width: 100%;
+        }
+        &__info {
+            padding: 10px;
+            &-name {
+                margin-top: 20px;
+            }
+        }
+        &__basics {
+            display: flex;
+            flex-direction: column;
+            img {
+                width: 100%;
+            }
+        }
+        &__btns {
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        &__descr {
+            margin-top: 20px;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .char {
+        &__rightside-wrapper {
+            height: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        &__info-name {
+            line-height: 25px;
+        }
+        &__info {
+            order: 2;
+            margin-top: 15px;
+            position: sticky;
+            top: 20px;
+        }
+        &__search-form {
+            margin-top: 0px;
+            order: 1;
+        }
+    }
+}
+
+@media (max-width: 576px) {
+    .char {
+        &__rightside-wrapper {
+            margin-top: 20px;
+            height: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 25px;
+        }
+        &__info-name {
+            line-height: 25px;
+        }
+        &__info {
+            order: 2;
+            margin-top: 15px;
+            position: static;
+            top: 20px;
+        }
+    }
 }

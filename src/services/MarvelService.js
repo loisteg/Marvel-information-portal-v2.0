@@ -52,7 +52,7 @@ const useMarvelService = () => {
             thumbnail: comics.thumbnail.path + `.${comics.thumbnail.extension}`,
             homepage: comics.urls[0].url,
             price: comics.prices[0].price ? comics.prices[0].price  + '$' : "NOT AVAILABLE",
-            language: comics.textObjects[0] ? comics.textObjects[0].language : null
+            language: comics.textObjects[0] ? comics.textObjects[0].language : "No information"
         }
     }
 
